@@ -1,4 +1,5 @@
 Description:
+___________________________________________
 This project consists of 3 main directories;
     - ansible which contains all the files and directories needed to setup and configure the website on the VMs
     - backend_setup, which contains all the files needed to create a file on the "infra" directory which will create an s3 bucket each time you create the infrastructure. the point of the s3 bucket is to store the terraform state file and act as an secure remote storage.
@@ -24,8 +25,9 @@ Explaining the subdirectories and files:
         - main.tf is the root main.tf file, it holds the code that runs each module and defines the required the variables
     - backend_setup:
         - backend_setup is used to create the backend that stores terraform state files. it will output a file called "backend_config.tf" under infra that will create an s3 bucket which stores the terraform state files.
-        
+___________________________________________
 How to run all the provisioning and code:
+___________________________________________
 Step 1, setup the backend for your terraform state
     - Navigate to the "backend_setup" directory
     - execute the "terraform apply" command to setup a backend your terraform state files, this will create a backend_config.tf file in your infra folder.
@@ -37,8 +39,9 @@ Step 3, configure the application using ansible
     - Navigate to "ansible" directory
     - execute the "ansible-playbook app_setup.yaml" command
 Done! now you may navigate to the Public IPv4 DNS of the a03_web_server to see the website.
-
+___________________________________________
 Requirements:
+___________________________________________
 - you should have an AWS account
 - you should have an IAM user on AWS that have the following permissions:
     - AdministratorAccess-Amplify
@@ -55,4 +58,4 @@ Requirements:
 - "Terraform init" should be executed on both the "backend_setup" and the "infra" directories.
 - A repository on GitHub hosting the main code for the website.
 (This project uses the code from "https://github.com/timoguic/acit4640-py-mysql.git") Its a simple website that uses JavaScript to retrieve the name and ID from a table located on mysql.
-
+___________________________________________
