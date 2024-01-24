@@ -62,3 +62,5 @@ Requirements:
 - A repository on GitHub hosting the main code for the website.
 (This project uses the code from "https://github.com/timoguic/acit4640-py-mysql.git") Its a simple website that uses JavaScript to retrieve the name and ID from a table located on mysql.
 ___________________________________________
+Example website:
+This is the example of the website I have setup and hosted: http://ec2-54-212-80-37.us-west-2.compute.amazonaws.com/
