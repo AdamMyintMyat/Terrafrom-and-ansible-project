@@ -28,20 +28,20 @@ Explaining the subdirectories and files:
         - main.tf is the root main.tf file, it holds the code that runs each module and defines the required the variables
     - backend_setup:
         - backend_setup is used to create the backend that stores terraform state files. it will output a file called "backend_config.tf" under infra that will create an s3 bucket which stores the terraform state files.
-___________________________________________
+
 How to run all the provisioning and code:
 
-Step 1, setup the backend for your terraform state
-    - Navigate to the "backend_setup" directory
-    - execute the "terraform apply" command to setup a backend your terraform state files, this will create a backend_config.tf file in your infra folder.
-Step 2, setup your infrastructure
-    - Navigate to "infra" directory
-    - execute the "terraform apply" command to create your VPC and setup the infrastructure. This will also create a backend S3 bucket which stores the terraform.tfstate file
-    (Note, running terraform apply again after applying once will cause an error updating VPC Security Rules group, this error is caused by trying to open all ports to and from a security group more than once, this is a well known bug and can be safely ignored.)
-Step 3, configure the application using ansible
-    - Navigate to "ansible" directory
-    - execute the "ansible-playbook app_setup.yaml" command
-Done! now you may navigate to the Public IPv4 DNS of the a03_web_server to see the website.
+    - Step 1, setup the backend for your terraform state
+        - Navigate to the "backend_setup" directory
+        - execute the "terraform apply" command to setup a backend your terraform state files, this will create a backend_config.tf file in your infra folder.
+    - Step 2, setup your infrastructure
+        - Navigate to "infra" directory
+        - execute the "terraform apply" command to create your VPC and setup the infrastructure. This will also create a backend S3 bucket which stores the terraform.tfstate file
+        (Note, running terraform apply again after applying once will cause an error updating VPC Security Rules group, this error is caused by trying to open all ports to and from a security group more than once, this is a well known bug and can be safely ignored.)
+    - Step 3, configure the application using ansible
+        - Navigate to "ansible" directory
+        - execute the "ansible-playbook app_setup.yaml" command
+    Done! now you may navigate to the Public IPv4 DNS of the a03_web_server to see the website.
 ___________________________________________
 Requirements:
 
