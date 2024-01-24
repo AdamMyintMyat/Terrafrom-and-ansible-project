@@ -1,9 +1,11 @@
 Description:
 
 This project consists of 3 main directories;
+
     - ansible which contains all the files and directories needed to setup and configure the website on the VMs
     - backend_setup, which contains all the files needed to create a file on the "infra" directory which will create an s3 bucket each time you create the infrastructure. the point of the s3 bucket is to store the terraform state file and act as an secure remote storage.
     - infra, which contains all the files and directories needed to setup an infrastructure to host the website. This will create a VPC, route table, internet gateway, 4 subnets, 3 security groups, 2 EC2 instances and one RDS instance
+    
 Explaining the subdirectories and files:
     - ansible:
         - ansible.cfg is the main configuration file for ansible telling where the inventory folder is lcoated and the necessary plugins for ansible to run successfully.
