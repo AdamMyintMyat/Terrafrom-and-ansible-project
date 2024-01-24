@@ -1,0 +1,4 @@
+---
+  backend_base_url : "http://ec2-52-42-107-113.us-west-2.compute.amazonaws.com:5000"
+  web_root_directory: /etc/nginx/sites-available/
+

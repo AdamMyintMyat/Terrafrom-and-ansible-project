@@ -1,0 +1,114 @@
+---
+    - name: install required packages
+      become: true
+      package:
+        name:
+        - git
+        - libmysqlclient-dev
+        - pkg-config
+        - python3-dev
+        - python3-pip
+        state: present
+      tags:
+      - backend server configure
+
+    - name: create a group for user
+      become: true
+      group:
+        name: "{{ backend_group }}"
+        state: present
+
+    - name: Create OS user for application
+      become: true
+      user:
+        name: "{{ backend_username }}"
+        group: "{{ backend_group }}"
+        create_home: true
+        state: present
+
+    - name: Create backend application directory
+      become: true
+      user:
+        name: /backend/src/
+        group: "{{ backend_group }}"
+        create_home: true
+        state: present
+   
+    - name: Get application code 
+      become: true
+      git:
+        repo: https://github.com/timoguic/acit4640-py-mysql.git
+        dest: /backend/src/
+        force: yes
+
+    - name: Edit backend.conf
+      become: true
+      copy:
+        src: backend.conf
+        dest: /backend/src/backend/backend.conf
+
+    - name: Update backend Configuration to listen to database ip
+      blockinfile:
+        path: /backend/src/backend/backend.conf
+        insertafter: [database]
+        block: |
+          MYSQL_HOST = {{ db_host }}
+          MYSQL_PORT = 3306
+          MYSQL_DB = {{ db_name }}
+          MYSQL_USER = {{ db_user }}
+          MYSQL_PASSWORD = {{ db_passwd }}
+      become: true
+
+    - name: install python dependency packages
+      become: true
+      pip:
+        requirements: /backend/src/backend/requirements.txt
+        extra_args: "-break-system-packages"
+#Configure backend via config file: backend.conf
+
+    - name: Configure backend via config file
+      become: true
+      template:
+        src: backend.service
+        dest: /etc/systemd/system/backend.service
+        owner: "{{ backend_username }}"
+        group: "{{ backend_group }}"
+#Create application unit file to start app and listen on port and address
+
+    - name: Reload systemd daemon
+      become: true
+      ansible.builtin.systemd:
+        daemon_reload: true
+
+    - name: create table for application
+      become: true
+      community.mysql.mysql_query:
+        login_db: '{{ db_name }}'
+        login_host: "{{ db_host }}"
+        login_password: "{{ db_passwd }}"
+        login_user: "{{ db_user }}"
+        login_port: 3306
+        query:
+        - CREATE TABLE IF NOT EXISTS {{ table_name }} (
+            bcit_id VARCHAR(255) PRIMARY KEY,
+            name VARCHAR(255)
+          );
+
+    - name: add data to application
+      become: true
+      community.mysql.mysql_query:
+        login_db: "{{ db_name }}"
+        login_host: "{{ db_host }}"
+        login_password: "{{ db_passwd }}"
+        login_user: "{{ db_user }}"
+        login_port: 3306
+        query:
+        - INSERT IGNORE INTO {{ table_name }}(bcit_id, name) VALUES ('A01173316', 'Adam');
+
+#start and enable application backend service 
+    - name: Start and enable application backend service
+      become: true
+      ansible.builtin.systemd:
+        name: backend
+        state: restarted
+        enabled: yes

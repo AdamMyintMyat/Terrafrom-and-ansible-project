@@ -1,0 +1,10 @@
+---
+  backend_service_file: etc/systemd/system/backend.service
+  backend_username: backend
+  backend_group: backend
+  db_name: "a03_db"
+  db_user: "adam"
+  db_passwd: "secure123"
+  db_host: "terraform-20240118224452786500000003.cff9iasrwbg2.us-west-2.rds.amazonaws.com"
+  table_name: item
+

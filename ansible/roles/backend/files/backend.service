@@ -1,0 +1,13 @@
+[Unit]
+Description=Backend application 4640
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/backend/src/backend
+User=backend
+ExecStart=/usr/local/bin/gunicorn wsgi:app -b 0.0.0.0:5000 -t 600 --keep-alive 60
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

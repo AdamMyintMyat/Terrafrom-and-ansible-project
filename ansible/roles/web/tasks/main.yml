@@ -1,0 +1,51 @@
+---
+    - name: install required packages
+      become: true
+      package:
+        name: 
+        - git
+        - nginx
+        state: present
+
+    - name: create and change permissions of web root directory
+      become: true
+      file:
+        path: "{{ web_root_directory}}"
+        mode: '0644'
+
+    - name: Configure nginx using nginx.conf file 
+      ansible.builtin.template:
+        src: nginx.conf
+        dest: /etc/nginx/sites-available/default
+      become: true
+
+    - name: Update NGINX Configuration to listen to backend public DNS
+      lineinfile:
+        path: /etc/nginx/sites-available/default
+        regexp: dns_name
+        line: "\tproxy_pass {{ backend_base_url }};"
+      become: true
+
+    - name: restart and enable nginx service 
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
+        enabled: true
+      become: true
+
+    - name: Get application code 
+      become: true
+      git:
+        repo: https://github.com/timoguic/acit4640-py-mysql.git
+        dest: /frontend
+        force: yes
+
+    - name: change frontend owner
+      become: true
+      file:
+        path: /frontend/
+        owner: ubuntu
+        group: ubuntu
+        state: directory
+        recurse: yes
+        mode: '777'

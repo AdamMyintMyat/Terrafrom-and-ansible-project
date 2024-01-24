@@ -1,0 +1,17 @@
+---
+    - name: Update and upgrade apt packages
+      become: true
+      apt:
+        upgrade: yes
+        update_cache: yes
+
+    - name: Install necessary packages
+      package:
+        name: 
+        - bind9-dnsutils
+        - tcpdump
+        - nmap
+        - mysql-client
+        state: present
+      tags:
+      - host configure
